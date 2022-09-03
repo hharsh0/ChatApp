@@ -1,23 +1,21 @@
-/**
- * If you are not familiar with React Navigation, refer to the "Fundamentals" guide:
- * https://reactnavigation.org/docs/getting-started
- *
- */
 import { FontAwesome } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { ColorSchemeName, Pressable } from 'react-native';
+import { ColorSchemeName, Image, Pressable, Text, useWindowDimensions, View } from 'react-native';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
-import TabOneScreen from '../screens/TabOneScreen';
+import TabOneScreen from '../screens/HomeScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
+import ChatRoomScreen from '../screens/ChatRoomScreen';
+import HomeScreen from '../screens/HomeScreen'
+import { Feather } from "@expo/vector-icons";
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -38,12 +36,105 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 function RootNavigator() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
-      <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
-      <Stack.Group screenOptions={{ presentation: 'modal' }}>
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ headerTitle: (props) => <HomeHeader {...props} /> }}
+      />
+      <Stack.Screen
+        name="ChatRoom"
+        component={ChatRoomScreen}
+        options={{
+          headerTitle: (props) => <ChatRoomHeader {...props} />,
+          headerBackVisible: false,
+        }}
+      />
+      <Stack.Screen
+        name="NotFound"
+        component={NotFoundScreen}
+        options={{ title: "Oops!" }}
+      />
+      <Stack.Group screenOptions={{ presentation: "modal" }}>
         <Stack.Screen name="Modal" component={ModalScreen} />
       </Stack.Group>
     </Stack.Navigator>
+  );
+}
+
+const HomeHeader = (props: any) => {
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        padding: 10,
+        alignItems: "center",
+        justifyContent: 'space-between',
+        flex: 1,
+      }}
+    >
+      <Image
+        style={{ width: 30, height: 30, borderRadius: 30 }}
+        source={{
+          uri: "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/4.jpg",
+        }}
+      />
+      <Text style={{ fontWeight: "bold", }}>
+        Home
+      </Text>
+      <View style={{ flexDirection: "row" }}>
+        <Feather
+          style={{ marginHorizontal: 10 }}
+          name="camera"
+          size={24}
+          color="black"
+        />
+        <Feather
+          style={{ marginHorizontal: 10 }}
+          name="edit-2"
+          size={24}
+          color="black"
+        />
+      </View>
+    </View>
+  );
+}
+
+const ChatRoomHeader = (props: any) => {
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        padding: 10,
+        alignItems: "center",
+        justifyContent: "space-between",
+        flex: 1,
+      }}
+    >
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <Image
+          style={{ width: 30, height: 30, borderRadius: 30 }}
+          source={{
+            uri: "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/4.jpg",
+          }}
+        />
+        <Text style={{ fontWeight: "bold", marginLeft: 20 }}>{props.children}</Text>
+      </View>
+
+      <View style={{ flexDirection: "row" }}>
+        <Feather
+          style={{ marginHorizontal: 10 }}
+          name="camera"
+          size={24}
+          color="black"
+        />
+        <Feather
+          style={{ marginHorizontal: 10 }}
+          name="edit-2"
+          size={24}
+          color="black"
+        />
+      </View>
+    </View>
   );
 }
 
